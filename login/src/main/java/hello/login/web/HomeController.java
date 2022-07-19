@@ -56,11 +56,13 @@ public class HomeController {
 
 //    @GetMapping("/")
     public String homeLoginV3(HttpServletRequest request, Model model) {
+
         //세션이 없으면 home
         HttpSession session = request.getSession(false);
         if (session == null) {
             return "home";
         }
+
         Member loginMember = (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
         //세션에 회원 데이터가 없으면 home
         if (loginMember == null) {
@@ -84,4 +86,5 @@ public class HomeController {
         model.addAttribute("member", loginMember);
         return "loginHome";
     }
+
 }
