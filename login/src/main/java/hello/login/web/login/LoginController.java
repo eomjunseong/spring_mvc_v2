@@ -145,7 +145,7 @@ public class LoginController {
      * @return
      */
 //    @PostMapping("/logout")
-    public String logout(HttpServletResponse response) {
+    public String logoutV1(HttpServletResponse response) {
         expireCookie(response, "memberId");
         return "redirect:/";
     }
@@ -169,13 +169,14 @@ public class LoginController {
     @PostMapping("/logout")
     public String logoutV3(HttpServletRequest request) {
         //세션을 삭제한다.
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
+        HttpSession session = request.getSession(false); //자동 생성 없이 있으면 받아와라
+        if (session != null) { //있네?
+            session.invalidate(); //없애
         }
-        return "redirect:/";
+        return "redirect:/"; //재요청 시킴
     }
 
+    //logout V1
     private void expireCookie(HttpServletResponse response, String cookieName) {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setMaxAge(0);
