@@ -17,30 +17,35 @@ public class LoginCheckFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String requestURI = httpRequest.getRequestURI();
 
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-
-
         try{
-            log.info("인증 체크 필터 시작 {}", requestURI);
+            log.info("[LOGIN DOFILTER 진입] {}", requestURI);
             if(isLoginCheckPath(requestURI)){ //True면 체크해야되는 경로
-                log.info("인증 체크 로직 실행 {}", requestURI);
+                log.info("[LOGIN DOFILTER 인증시작] {}", requestURI);
                 HttpSession session = httpRequest.getSession();
+                //쿠키에 sessionId가 있는 지 없는지 체크
                 if(session==null||session.getAttribute(SessionConst.LOGIN_MEMBER)==null){
-                    log.info("미인증 사용자 요청 {}", requestURI);
+                    //없다
+                    log.info("[LOGIN DOFILTER 인증 실패 유저] {}", requestURI);
                     //처리후 이동을 위해
                     httpResponse.sendRedirect("/login?redirectURL="+requestURI);
                     return;//-->finally 항상 호출
                 }
+                log.info("[LOGIN DOFILTER 인증 해야하는 유저] {}", requestURI);
+                //있다 .
+                //유효성 검사는 ?
             }
+
             chain.doFilter(request, response);
         }catch (Exception e){
             throw e; //톰캣까지 예외를 보냄
         }finally{
-            log.info("인증 체크 필터 종료 {}", requestURI);
+            log.info("[LOGIN DOFILTER 인증 종료] {}", requestURI);
         }
     }
     /**

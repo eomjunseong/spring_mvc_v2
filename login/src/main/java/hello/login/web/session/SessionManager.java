@@ -19,7 +19,6 @@ public class SessionManager {
     private Map<String, Object> sessionStore = new ConcurrentHashMap<>();
 
     /**
-     *
      * 세션 생성
      */
 

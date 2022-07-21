@@ -15,7 +15,6 @@ class SessionManagerTest {
     SessionManager sessionManager = new SessionManager();
 
 
-
     @Test
     void sessionTest(){
 

@@ -23,10 +23,17 @@ public class LoginController {
     private final LoginService loginService;
     private final SessionManager sessionManager;
 
+    /**
+     * GET 로그인
+     * @param form
+     * @return
+     */
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form){
         return  "login/loginForm";
     }
+
+
 
     /**
      * LOGIN_V1
@@ -38,6 +45,7 @@ public class LoginController {
      */
 //    @PostMapping("/login")
     public String login(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletResponse resp) {
+
         if (bindingResult.hasErrors()) {
             return "login/loginForm";
         }
@@ -51,8 +59,12 @@ public class LoginController {
             return "login/loginForm";
         }
 
+        //쿠키생성
+        //memberId : loginId
         Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
+
         //쿠키에 시간 정보 안주면, 세션 쿠키(브라우저 종료시 증발)
+        //response에 담음
         resp.addCookie(idCookie);
         return "redirect:/";
     }
@@ -79,7 +91,9 @@ public class LoginController {
         }
         //로그인 성공 처리
         //세션 관리자를 통해 세션을 생성하고, 회원 데이터 보관
+        //1)response에 addCookie() 되서 sessionId 저장되어 있음
         sessionManager.createSession(loginMember, response);
+
         return "redirect:/";
     }
 
@@ -107,7 +121,8 @@ public class LoginController {
         //세션이 있으면 있는 세션 반환, 없으면 신규 세션 생성 반환
         HttpSession session = request.getSession();
 
-        //세션에 로그인 회원 정보 보관
+        //세션에 로그인 회원 정보
+        //쿠키에 JSESSIONID=E9C0345A8FA0E290CCF6A6D4658DD804 이런식으로 담김
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
 
         return "redirect:/";
